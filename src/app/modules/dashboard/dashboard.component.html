@@ -1,0 +1,10 @@
+<div class="d-flex flex-column justify-content-between gap-3 p-3" style="min-height: 90vh;">
+  <div class="d-flex justify-content-between gap-3">
+    <div *ngFor="let market of markets; let i = index" class="flex-fill">
+      <app-market [types]="types" [market]="market" [index]="i" (marketChange)="onMarketChange($event, i)"></app-market>
+    </div>
+  </div>
+  <div class="d-flex justify-content-end align-items-end p-3">
+    <button type="button" class="btn btn-dark saveBtn" (click)="save()">Kaydet</button>
+  </div>
+</div>

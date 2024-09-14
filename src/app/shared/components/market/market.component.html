@@ -1,0 +1,174 @@
+<div class="marketHeader">
+  {{market.name}}
+</div>
+<div>
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">Reyon</th>
+        <th scope="col">Tür</th>
+        <th style="text-align: left;" scope="col">Ürünler</th>
+        <th style="text-align: right;" scope="col">
+        
+        <button type="button" (click)="setMarketItem()" class="btn btn-outline-secondary aisleBtn" 
+            [attr.data-bs-target]="'#addAisleModal' + index" data-bs-toggle="modal">
+          Reyon Ekle
+        </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @for(item of market.items; track item; let j = $index){
+        <tr>
+          <td>R{{item.aisle.name}}  
+            <button type="button" style="margin-left: 10px;" (click)="deleteProductFromTable(j)" class="btn btn-link">
+              <i class="fa-regular fa-trash-can" style="color: red;"></i>
+            </button> 
+          </td>
+          <td>{{item.type?.name}}</td>
+          <td>
+            @for(product of item.products; track product; let k = $index){
+              <button type="button" (click)="selectItemsProductIndex(j,k,item,product)" class="btn btn-secondary productName btn-sm" 
+                  [attr.data-bs-target]="'#updateProductModal' +index" data-bs-toggle="modal">
+                  {{product.name}}
+              </button>
+            
+            
+            }
+          </td>
+          <td style="text-align: right;">
+            <button type="button" (click)="selectItemsIndex(j)" class="btn btn-secondary productBtn btn-sm" 
+              [attr.data-bs-target]="'#addProductModal' +index" data-bs-toggle="modal">
+              Ürün Ekle
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+
+<div class="modal fade" [id]="'addAisleModal'+ index " tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-header" style="border: none;">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Reyon Ekle</h1>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group inpt mb-3">
+          <label for="formGroupExampleInput" class="form-label">Reyon Adı</label>
+          <input type="text" [disabled]="true" class="form-control" [ngModel]=" 'R'+marketItem.aisle.name" id="formGroupExampleInput">
+        </div>
+       
+        <div class="mb-3">
+          <label for="reyonTuru" class="form-label">Reyon Türü</label>
+          <select class="form-select custom-select" [(ngModel)]="marketItem.type" id="reyonTuru">
+            <option *ngFor="let type of types" [ngValue]="type">{{ type.name }}</option>
+          </select>
+        </div>
+        <div class="form-group inpt mb-3">
+          <label for="formGroupExampleInput2" class="form-label">Eklenecek Market</label>
+          <input type="text" [disabled]="true" [ngModel]="market.name" class="form-control" id="formGroupExampleInput2">
+        </div>
+      </div>
+      <div class="modal-footer" style="border: none;">
+        <button type="button" (click)="setAisle()" class="btn btn-secondary saveBtn btn-sm" data-bs-dismiss="modal">
+          Ekle
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" [id]="'addProductModal'+ index" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-header" style="border: none;">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Ürün Ekle</h1>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group inpt mb-3">
+          <label for="formGroupExampleInput" class="form-label">Ürün ID</label>
+          <input type="number" class="form-control" [(ngModel)]="product.id" id="formGroupExampleInput">
+        </div>
+
+        <div class="form-group inpt mb-3">
+          <label for="formGroupExampleInput2" class="form-label">Ürün Adı</label>
+          <input type="text" [(ngModel)]="product.name" class="form-control" id="formGroupExampleInput2">
+        </div>
+       
+        <div class="form-group mb-3">
+          <div>
+            <label for="reyonTuru" class="form-label">Eklenecek Reyon</label>
+          </div>
+          <div style="border: 1px solid #a8a8a8; padding: 5px;">
+            <p> {{market.items[selectedItemIndex].type?.name}}</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="border: none;">
+        <button type="button" (click)="setProduct()" class="btn btn-secondary saveBtn btn-sm" data-bs-dismiss="modal">
+          Ekle
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" [id]="'updateProductModal'+ index" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark">
+      <div class="modal-header" style="border: none;">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Ürün Ekle</h1>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-3">
+          <div>
+            <label for="reyonTuru" class="form-label">Ürün ID</label>
+          </div>
+          <div style="border: 1px solid #a8a8a8; display: flex; align-items: center; padding: 7px;">
+             {{product.id}}
+          </div>
+        </div>
+
+        <div class="form-group inpt mb-3">
+          <label for="formGroupExampleInput2" class="form-label">Ürün Adı</label>
+          <input type="text" [(ngModel)]="product.name" class="form-control" id="formGroupExampleInput2">
+        </div>
+    
+        <div class="form-group mb-3">
+          <div>
+            <label for="reyonTuru" class="form-label">Bulunduğu Reyon Türü</label>
+          </div>
+          <div style="border: 1px solid #a8a8a8; display: flex; align-items: center; padding: 7px;">
+            {{market.items[selectedItemIndex].type?.name}}
+         </div>
+        </div>
+        <div class="mb-3">
+          <label for="market" class="form-label">Taşınacak Marketi Seçiniz</label>
+          <select class="form-select custom-select" id="market" [(ngModel)]="selectedMarket" (change)="selectMarket()">
+            <option *ngFor="let market of markets" [ngValue]="market">{{ market.name }}</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="market" class="form-label">Taşınacak Reyonu Seçiniz ({{filtredMarket.name}})</label>
+          <select [disabled]="!selectedMarket.id" class="form-select custom-select" id="market" [(ngModel)]="product.aisle">
+            <option *ngFor="let item of filtredMarket.items"  [ngValue]="item.aisle">R{{ item.aisle.name }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer" style="border: none;">
+        <button type="button" (click)="deleteProduct()" class="btn btn-outline-danger" data-bs-toggle="modal">
+          Ürünü Sil
+        </button>
+        <button type="button" (click)="updateProduct()" class="btn btn-secondary saveBtn" data-bs-dismiss="modal">
+          Kaydet
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
